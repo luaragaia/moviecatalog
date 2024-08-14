@@ -1,0 +1,89 @@
+<main>
+  <div class="container-filter">
+    <h1 class="filter-subtitle">Milhões de filmes, séries e pessoas <br class="line-break">para descobrir. Explore já.</h1>
+    <div class="filter">
+      <p class="filter-by">FILTRE POR:</p>
+      <div class="genrer-container">
+        <div class="genrer">
+          <div class="options" *ngFor="let genre of genres">
+            <button class="genre-button" [ngClass]="{ 'active': genre.active }" (click)="toggleGenre(genre)">
+              {{ genre.name }}
+              <img *ngIf="genre.active" src="../../../assets/Close-circle.png" alt="fechar" class="close" width="20px" height="20px">
+            </button>
+            <input type="hidden" [value]="genre.id" class="genre-id">
+          </div>
+        </div>
+        <div class="search-input">
+          <input class="search-button" type="search" placeholder="Buscar por Titulo..." [(ngModel)]="searchQuery" (keyup.enter)="searchMovies()">
+          <button (click)="searchMovies()"><img src="../../../assets/lupa-black.png" alt="" height="30px" class="search-icon"></button>
+        </div>
+        </div>
+      </div>
+  </div>
+
+  <section class="section-movie" *ngIf="movies$ | async as movies; else skeleton">
+    <div class="movie" *ngFor="let movie of movies.results">
+      <div class="card-group">
+        <div class="card">
+          <div class="image-placeholder">
+            <img *ngIf="movie.poster_path; else defaultImage" class="card-img-top" [src]="'https://image.tmdb.org/t/p/original/' + movie.poster_path" alt="{{ movie.title }}" (load)="onImageLoad($event)">
+            <ng-template #defaultImage>
+              <img class="card-img-top" src="../../../assets/error-poster.png" alt="Imagem indisponível" id="errorImage">
+            </ng-template>
+          </div>
+          <div class="card-body">
+            <h5 class="card-title">{{ movie.title }}</h5>
+            <p class="card-date">{{ movie.release_date | localDateTimePipe }}</p>
+            <input type="hidden" [value]="movie.genre_ids" class="genre-id">
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <ng-template #skeleton>
+    <div class="section-movie">
+      <div class="movie" *ngFor="let item of skeletonItems">
+        <div class="card-group">
+          <div class="card skeleton-card">
+            <div class="image-placeholder skeleton-loader"></div>
+            <div class="card-body">
+              <h5 class="card-title skeleton-loader"></h5>
+              <p class="card-date skeleton-loader"></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+
+    <section class="section-noMovie" id="noMovies" *ngIf="noMovies" >
+      <div class="noMoviesContainer">
+        <h1 id="text-title">Nenhum filme encontrado!</h1>
+    </div>
+    </section>
+
+    <div class="paginator">
+      <nav aria-label="Page navigation example">
+        <ul class="pagination justify-content-center">
+          <li class="page-item"[class.disabled]="pageStart === 1" id="noMobile">
+            <a class="page-link" id="noMobile" (click)="firstPage()">Primeira</a>
+          </li>
+          <li class="divider" (click)="backPage()" [class.disabled]="pageStart === 1">
+            <img src="../assets/Arrow-right.png" alt="Anterior" width="24px" height="24px" >
+          </li>
+          <li class="page-item" [ngClass]="{ 'active-page': currentPage === (pageStart + i) }" *ngFor="let page of [].constructor(pageSize); let i = index" [class.disabled]="(pageStart + i) > totalPages">
+            <a class="page-link" (click)="setPage(pageStart + i)" href="javascript:void(0)" *ngIf="(pageStart + i) <= totalPages">{{ pageStart + i }}</a>
+          </li>
+          <li class="divider" (click)="nextPage()" [class.disabled]="pageStart + pageSize > totalPages">
+            <img src="../assets/Arrow-left.png" alt="Próximo" width="24px" height="24px">
+          </li>
+          <li class="page-item" [class.disabled]="currentPage === totalPages">
+            <a class="page-link" (click)="lastPage()">Última</a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+
+</main>
+<app-error-alert></app-error-alert>

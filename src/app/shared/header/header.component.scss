@@ -1,0 +1,30 @@
+@import '../../core/vars.scss';
+
+header{
+  margin: 0;
+  width: 100%;
+  background-color: $blue;
+  padding:1rem 0 1rem 5rem;
+}
+
+
+  .logo{
+    justify-content: center;
+    display: flex;
+    width: 140px;
+  }
+
+
+@media (max-width: 600px) {
+  header {
+    height: auto;
+    overflow-x: hidden;
+    text-align: center;
+    padding: 1rem;
+
+    .logo {
+      width: 140px;
+      margin: 0 auto;
+    }
+  }
+}

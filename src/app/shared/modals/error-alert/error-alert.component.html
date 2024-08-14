@@ -1,0 +1,10 @@
+<div class="modal" *ngIf="isVisible">
+  <div class="modal-content">
+    <img src="../../../../assets/cancel_24dp_FILL0_wght400_GRAD0_opsz24.png" alt="erro">
+    <h2>{{ title }}</h2>
+    <p>
+      <ng-container *ngFor="let line of formattedMessage">{{ line }}<br></ng-container>
+    </p>
+    <button (click)="close()">OK</button>
+  </div>
+</div>
